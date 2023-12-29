@@ -43,7 +43,7 @@ go build -o disclosure-cli
 You can pull a Disclosure-CLI image from https://github.com/orgs/mercedes-benz/packages or build it yourself with the Dockerfile provided in the repository. 
 
 ```
-docker pull ghcr.io/mercedes-benz/disclosure-cli
+docker pull ghcr.io/mercedes-benz/disclosure-cli:0.96.4-amd64
 ```
 or
 ```
@@ -52,9 +52,14 @@ cd disclosure-cli
 docker build . -t disclosure-cli
 ```
 
-Run the image
+Run the image to get project information
 ```
 docker run disclosure-cli project details -H HOST -u PROJECT_UUID -t TOKEN
+```
+
+Run the image to upload a sbom file to a project version
+```
+docker run -v $(pwd)/sbom.spdx.json:/sbom.spdx.json disclosure-cli version sbomUpload sbom.spdx.json -H HOST -u PROJECT_UUID  -t TOKEN -v VERSION
 ```
 
 ### Disclosure-CLI as GitHub Action
@@ -96,6 +101,7 @@ Available Commands:
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
   project     Execute a project command
+  sbom        Execute a project version sbom command
   sha256      Generates a sha256 hash
   version     Execute a project version command
 
@@ -128,7 +134,7 @@ project schema        Returning the project schema
 project status        Returning the project status
 
 version ccs           CCS status
-version ccsAdd        Add reference (url) to complete coresponding source code
+version ccsAdd        Add reference (url) to complete corresponding source code
 version create        Create version
 version details       Returning the project version details
 version list          Returning the project version list
@@ -138,7 +144,15 @@ version sbomStatus    Status information of SBOM
 version sbomUpload    Uploads SBOM file to a project version
 version sboms         List of all uploaded SBOMS
 
+sbom tag              Add tag to a sbom
+
 ```
+
+Note 12-06-2023: 
+2024 we will review the disclosure-cli to restructure the command structure and add new features. 
+With the current release we establish a new "sbom" command with a new sub command to add tags to a sbom.
+Existing sbom commands (sbomDetails, sbomNotice, sbomStatus, sbomUpload, sboms) will move to the new "sbom" command in 2024.  
+
 
 ### Help on commands
 ```
@@ -183,7 +197,7 @@ We will create a version `1.0` in the following steps.
 ```
 ```
 {
-    "name": "disclosure-cli-cli-example",
+    "name": "disclosure-cli-example",
     "uuid": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee",
     "created": "2022-03-16T14:54:13.306719888Z",
     "updated": "2022-03-16T15:13:45.461701011Z",
@@ -200,7 +214,8 @@ Our project still does not have a project version. Let's create one.
 ```
 {
     "success": true,
-    "message": "version created"
+    "message": "version created",
+    "key": "ab02a5b5-8923-41pb-9a9b-cd5836d66dbe"
 }
 ```
 Let's have a look at the project versions of our project. There should only be one ;)
@@ -223,7 +238,10 @@ The SBOM is always related to a specific project version. In our case it is `1.0
 ```
 {
     "docIsValid": true,
-    "validationMessage": ""
+    "validationFailedMessage": "",
+    "hash": "77a50e85477db7580d3052403a8d1ebe4ad9a3b912ad18e3a3b4f0ccecf36c65",
+    "fileUploaded": true,
+    "id": "SPDXRef-DOCUMENT"
 }
 ```
 ```
@@ -231,12 +249,12 @@ The SBOM is always related to a specific project version. In our case it is `1.0
 ```
 ```
 {
-    "name": "Disclosure Portal Backend/1.0",
+    "name": "Disclosure-CLI,
     "id": "SPDXRef-DOCUMENT",
     "version": "SPDX-2.2",
     "creators": "Tool: xxx",
-    "created": "2022-03-17T14:40:11.660329585Z",
-    "uploaded": "2022-03-17T14:40:11.660329585Z",
+    "created": "2022-03-16T14:54:13.306719888Z",
+    "updated": "2022-03-16T15:13:45.461701011Z",
     "status": true
 }
 ```
