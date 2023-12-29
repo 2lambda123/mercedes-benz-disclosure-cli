@@ -179,23 +179,23 @@ In this guided example we will use a config file to access our project, but you 
 
 ### Step 0 - Preparation
 
-For the next few steps you need a project in the Disclosure Portal, and the unique identifier and token of your project.  
+For the next few steps you need a project in the Disclosure Portal, and the unique identifier and token of your project.
 You can skip to the Disclosure-CLI subsection, if you already have this data.
 
 **Disclosure Portal**
 _Only project owners in the Disclosure Portal have the permissions to do these steps._
-a) Create a new Project in the Disclosure Portal. Take note of the Unique identifier of the project, you will need it in a moment.  
+a) Create a new Project in the Disclosure Portal. Take note of the Unique identifier of the project, you will need it in a moment.
 b) Create a token. You will need this token to access your project with the Disclosure-CLI.
 
-**Disclosure-CLI**  
-a) Create a new folder wherever you want. I will call this folder `disclosure-cli`, but you can name it differently.  
+**Disclosure-CLI**
+a) Create a new folder wherever you want. I will call this folder `disclosure-cli`, but you can name it differently.
 b) Download the source code for the Disclosure-CLI client and build it.
 
 ```
 go build -o disclosure-cli
 ```
 
-c) Move `disclosure-cli` into your created folder (a)  
+c) Move `disclosure-cli` into your created folder (a)
 d) Create a new config file named `config.yml` with the following attributes and values in the same folder
 
 ```yml
