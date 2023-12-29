@@ -7,10 +7,12 @@ SPDX-License-Identifier: MIT
 # Disclosure-CLI
 
 ## Introduction
+
 The Disclosure-CLI provides an easy way to access the public api of the FOSS Disclosure Portal.
 It is the recommended tool for external suppliers who do not have access to the Disclosure Portal and need access to the project data.
 
 With the Disclosure-CLI external suppliers can:
+
 - Create new project versions
 - Access policy rules
 - Upload SBOM files
@@ -18,21 +20,25 @@ With the Disclosure-CLI external suppliers can:
 - Get general information about the project
 
 ## Table of Contents
-* [Download and build](#download-and-build)
-* [How-To](#how-to)
-* [Guided example](#guided-example)
-* [Contributing](#contributing)
-* [Code of Conduct](#code-of-conduct)
-* [License](#license)
-* [Provider Information](#provider-information)
+
+- [Download and build](#download-and-build)
+- [How-To](#how-to)
+- [Guided example](#guided-example)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
+- [Provider Information](#provider-information)
 
 ## Download and build
+
 We distribute the Disclosure-CLI as executables, container image and github action.
 
 ### Disclosure-CLI executables
-You can download the binaries for the Disclosure-CLI in the GitHub releases page. 
 
-You can also download the source code and build it yourself. 
+You can download the binaries for the Disclosure-CLI in the GitHub releases page.
+
+You can also download the source code and build it yourself.
+
 ```
 git clone https://github.com/mercedes-benz/disclosure-cli.git
 cd disclosure-cli
@@ -40,12 +46,15 @@ go build -o disclosure-cli
 ```
 
 ### Disclosure-CLI as container image
-You can pull a Disclosure-CLI image from https://github.com/orgs/mercedes-benz/packages or build it yourself with the Dockerfile provided in the repository. 
+
+You can pull a Disclosure-CLI image from https://github.com/orgs/mercedes-benz/packages or build it yourself with the Dockerfile provided in the repository.
 
 ```
 docker pull ghcr.io/mercedes-benz/disclosure-cli:0.96.4-amd64
 ```
+
 or
+
 ```
 git clone https://github.com/mercedes-benz/disclosure-cli.git
 cd disclosure-cli
@@ -53,25 +62,27 @@ docker build . -t disclosure-cli
 ```
 
 Run the image to get project information
+
 ```
 docker run disclosure-cli project details -H HOST -u PROJECT_UUID -t TOKEN
 ```
 
 Run the image to upload a sbom file to a project version
+
 ```
 docker run -v $(pwd)/sbom.spdx.json:/sbom.spdx.json disclosure-cli version sbomUpload sbom.spdx.json -H HOST -u PROJECT_UUID  -t TOKEN -v VERSION
 ```
 
 ### Disclosure-CLI as GitHub Action
-The definition of the action can be found in the file action.yml in the repository. A working example ([sbom-upload.yml](./.github/workflows/sbom-upload.yml)) can be found in the .github/workflows folder. 
 
+The definition of the action can be found in the file action.yml in the repository. A working example ([sbom-upload.yml](./.github/workflows/sbom-upload.yml)) can be found in the .github/workflows folder.
 
 ## How-To
 
-The recommended way to use the Disclosure-CLI as executable is with a config file, but you can also set environment variables or use flags with your commands instead. 
+The recommended way to use the Disclosure-CLI as executable is with a config file, but you can also set environment variables or use flags with your commands instead.
 The config file needs to be in the same folder as the Disclosure-CLI, needs to be named `config.yml` and must have the following structure:
 
-``` yml
+```yml
 projecttoken: "project-token"
 projectuuid: "project-uuid"
 projectversion: "1.0"
@@ -79,7 +90,8 @@ host: "PUBLIC API"
 ```
 
 The environment variables mus be named as follows:
-``` 
+
+```
 INPUT_TOKEN
 INPUT_PROJECT_UUID
 INPUT_PROJECT_VERSION
@@ -116,6 +128,7 @@ Use "disclosure-cli [command] --help" for more information about a command.
 ```
 
 ### Sample commands
+
 ```
 // Retrieving project detail
 ./disclosure-cli project details -H HOST -u PROJECT_UUID -t TOKEN
@@ -139,7 +152,7 @@ version create        Create version
 version details       Returning the project version details
 version list          Returning the project version list
 version sbomDetails   Details of SBOM
-version sbomNotice    Get third party notice information for a SBOM as html / json / text 
+version sbomNotice    Get third party notice information for a SBOM as html / json / text
 version sbomStatus    Status information of SBOM
 version sbomUpload    Uploads SBOM file to a project version
 version sboms         List of all uploaded SBOMS
@@ -148,45 +161,50 @@ sbom tag              Add tag to a sbom
 
 ```
 
-Note 12-06-2023: 
-2024 we will review the disclosure-cli to restructure the command structure and add new features. 
+Note 12-06-2023:
+2024 we will review the disclosure-cli to restructure the command structure and add new features.
 With the current release we establish a new "sbom" command with a new sub command to add tags to a sbom.
-Existing sbom commands (sbomDetails, sbomNotice, sbomStatus, sbomUpload, sboms) will move to the new "sbom" command in 2024.  
-
+Existing sbom commands (sbomDetails, sbomNotice, sbomStatus, sbomUpload, sboms) will move to the new "sbom" command in 2024.
 
 ### Help on commands
+
 ```
 version sbomUpload -h
 ```
 
-
 ## Guided example
+
 The next few steps will guide you through a Disclosure Portal project with the Disclosure-CLI.
-In this guided example we will use a config file to access our project, but you can also use flags or environment variables. 
+In this guided example we will use a config file to access our project, but you can also use flags or environment variables.
 
 ### Step 0 - Preparation
+
 For the next few steps you need a project in the Disclosure Portal, and the unique identifier and token of your project.  
 You can skip to the Disclosure-CLI subsection, if you already have this data.
 
 **Disclosure Portal**
-*Only project owners in the Disclosure Portal have the permissions to do these steps.*
+_Only project owners in the Disclosure Portal have the permissions to do these steps._
 a) Create a new Project in the Disclosure Portal. Take note of the Unique identifier of the project, you will need it in a moment.  
 b) Create a token. You will need this token to access your project with the Disclosure-CLI.
 
 **Disclosure-CLI**  
 a) Create a new folder wherever you want. I will call this folder `disclosure-cli`, but you can name it differently.  
 b) Download the source code for the Disclosure-CLI client and build it.
+
 ```
 go build -o disclosure-cli
 ```
+
 c) Move `disclosure-cli` into your created folder (a)  
 d) Create a new config file named `config.yml` with the following attributes and values in the same folder
-``` yml
+
+```yml
 projecttoken: "project-token"
 projectuuid: "project-uuid"
 projectversion: "1.0"
 host: "" // host needs to be changed to public api
 ```
+
 If you have just created a new project, your project on the Disclosure Portal won't have a project version yet.
 We will create a version `1.0` in the following steps.
 
@@ -195,6 +213,7 @@ We will create a version `1.0` in the following steps.
 ```
 ./disclosure-cli project details
 ```
+
 ```
 {
     "name": "disclosure-cli-example",
@@ -207,10 +226,13 @@ We will create a version `1.0` in the following steps.
 ```
 
 ### Step 2 - Create a project version
+
 Our project still does not have a project version. Let's create one.
+
 ```
 ./disclosure-cli version create "1.0" "First iteration of the disclosure-cli example"
 ```
+
 ```
 {
     "success": true,
@@ -218,10 +240,13 @@ Our project still does not have a project version. Let's create one.
     "key": "ab02a5b5-8923-41pb-9a9b-cd5836d66dbe"
 }
 ```
+
 Let's have a look at the project versions of our project. There should only be one ;)
+
 ```
 ./disclosure-cli version list
 ```
+
 ```
 [
     "1.0"
@@ -229,12 +254,14 @@ Let's have a look at the project versions of our project. There should only be o
 ```
 
 ### Step 3 - Upload the SBOM of your project
+
 Next we will upload the SBOM and look at the metadata of the SBOM.
 The SBOM is always related to a specific project version. In our case it is `1.0` as described in our `config.yml`.
 
 ```
 ./disclosure-cli version sbomUpload ./disclosure-cli/sbom.json
 ```
+
 ```
 {
     "docIsValid": true,
@@ -244,9 +271,11 @@ The SBOM is always related to a specific project version. In our case it is `1.0
     "id": "SPDXRef-DOCUMENT"
 }
 ```
+
 ```
 ./disclosure-cli version sbomDetails
 ```
+
 ```
 {
     "name": "Disclosure-CLI,
